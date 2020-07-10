@@ -12,7 +12,7 @@ User notification system in which a user can:
 
 ## Notes
 
-I created a simple example of how this would work and hosted it on [notifications.pech0rin.com](http://notifications.pech0rin.com). The code that is running lives in this git repository.
+I created a simple example of how this would work and hosted it on [notifications.pech0rin.com](http://notifications.pech0rin.com). (Sorry the UI is so ugly!). The code that is running lives in this git repository.
 
 There are a few things missing in the live example:
 - Enable/Disable notifications
