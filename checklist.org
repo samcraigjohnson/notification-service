@@ -13,9 +13,13 @@
 
 *** DONE divide into workers
 
-*** TODO Add notifs endpoint
+*** DONE Add notifs endpoint
 
-*** TODO If time, create simple UI
+*** DONE If time, create simple UI
+
+*** TODO Write readme
+
+*** TODO Deploy on server
 
 
 ** To add
