@@ -20,6 +20,7 @@ def seed_events():
 
 @orm.db_session
 def data_setup():
+    """ Create some seed data to test """
     seed_events()
     u1 = User()
     u2 = User()
@@ -34,37 +35,26 @@ def data_setup():
 
 
 @orm.db_session
-def execute_test_scenario(ts):
-    ts.executed_at = datetime.utcnow()
-    create_notification(Events.EXECUTE)
+def execute_test_scenario(ts_id):
+    TestScenario[ts_id].executed_at = datetime.utcnow()
 
 
 @orm.db_session
-def delete_test_scenario(ts):
-    ts.deleted_at = datetime.utcnow()
-    create_notification(Events.DELETE)
+def delete_test_scenario(ts_id):
+    TestScenario[ts_id].deleted_at = datetime.utcnow()
 
 
 @orm.db_session
 def create_test_scenario():
     ts = TestScenario()
-    create_notification(Events.CREATE)
     return ts
 
 
 @orm.db_session
-def create_notification(event):
-    """ Eventually break this up into a queue """
-    db_event = get_event(event)
-    notif = Notification(event=db_event)
-
-    # Create a user notification for every subscription
-    for sub in db_event.notification_subscriptions:
-        UserNotification(user=sub.user, read=False, notification=notif)
-
-
-@orm.db_session
 def subscribe_user(user, event):
+    """ Subscribe a user to a type of event, only allow
+    one subscription per user per event
+    """
     db_event = get_event(event)
     if not NotificationSubscription.exists(user=user, event=db_event):
         return NotificationSubscription(user=user, event=db_event)

@@ -11,6 +11,8 @@
     - After a test scenario is created/execute/deleted create notification
       and fire off user notifications
 
+*** TODO divide into workers
+
 *** TODO If time, hook everything up to S3
 
 *** TODO If time, create simple UI
