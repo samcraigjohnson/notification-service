@@ -38,7 +38,19 @@ app.add_static_route("/bin", os.path.abspath("./web/bin"))
 app.add_static_route("/css", os.path.abspath("./web/css"))
 
 notifs = controllers.NotificationsResource()
+ts = controllers.TestScenarioResource()
 static = controllers.StaticResource()
 
-app.add_route("/api/cards", notifs)
+app.add_route("/api/notifs", notifs)
+app.add_route("/api/notifs/{notif_id:int}/read", notifs, suffix="read")
+
+app.add_route("/api/ts", ts)
+app.add_route("/api/ts/{test_id:int}", ts, suffix="single")
+app.add_route("/api/ts/{test_id:int}/execute", ts, suffix="execute")
 app.add_route("/", static)
+
+###
+# Setup
+###
+
+models.data_setup()

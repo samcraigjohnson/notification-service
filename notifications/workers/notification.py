@@ -3,18 +3,21 @@ from pony import orm
 from notifications import models
 
 from . import Worker
-from .user_notifications import UserNotificationWorker
+from .user_notification import UserNotificationWorker
 
 
 class NotificationWorker(Worker):
-    def __init__(self, event=None):
-        self.args = event.value
+    def __init__(self, test_id=None, event=None):
+        self.args = {'test_id': test_id, 'event': event.value}
 
     @orm.db_session
     def process(self):
-        event = models.Events[self.args]
+        event = models.Events[self.args['event']]
+        test_scenario = models.TestScenario[self.args['test_id']]
+
         db_event = models.get_event(event)
-        notif = models.Notification(event=db_event)
+        notif = models.Notification(event=db_event,
+                                    test_scenario=test_scenario)
 
         # Make sure notification is created before user notifications
         orm.commit()

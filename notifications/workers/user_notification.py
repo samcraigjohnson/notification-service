@@ -13,4 +13,7 @@ class UserNotificationWorker(Worker):
     def process(self):
         user = models.User[self.args['user_id']]
         notif = models.Notification[self.args['notification_id']]
-        models.UserNotification(user=user, notification=notif, read=False)
+
+        # In case message gets read twice
+        if not models.UserNotification.exists(user=user, notification=notif):
+            models.UserNotification(user=user, notification=notif, read=False)

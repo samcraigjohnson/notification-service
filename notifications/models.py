@@ -29,10 +29,6 @@ def data_setup():
     subscribe_user(u2, Events.EXECUTE)
     subscribe_user(u2, Events.DELETE)
 
-    ts = create_test_scenario()
-    execute_test_scenario(ts)
-    delete_test_scenario(ts)
-
 
 @orm.db_session
 def execute_test_scenario(ts_id):
@@ -83,6 +79,7 @@ class Event(db.Entity):
 
 class TestScenario(db.Entity):
     id = orm.PrimaryKey(int, auto=True)
+    notifications = orm.Set("Notification")
     created_at = orm.Optional(datetime)
     deleted_at = orm.Optional(datetime)
     executed_at = orm.Optional(datetime)
@@ -90,15 +87,29 @@ class TestScenario(db.Entity):
     def before_insert(self):
         self.created_at = datetime.utcnow()
 
+    def to_json(self):
+        return {'id': self.id}
+
 
 class Notification(db.Entity):
     id = orm.PrimaryKey(int, auto=True)
     event = orm.Required(Event)
+    test_scenario = orm.Required(TestScenario)
     user_notifications = orm.Set('UserNotification')
     created_at = orm.Optional(datetime)
 
     def before_insert(self):
         self.created_at = datetime.utcnow()
+
+    def message(self):
+        if self.event.name == Events.CREATE.value:
+            return f"Test scenario was created at {self.test_scenario.created_at}"
+
+        if self.event.name == Events.EXECUTE.value:
+            return f"Test scenario was executed at {self.test_scenario.executed_at}"
+
+        if self.event.name == Events.DELETE.value:
+            return f"Test scenario was deleted at {self.test_scenario.deleted_at}"
 
 
 class NotificationSubscription(db.Entity):
@@ -112,3 +123,9 @@ class UserNotification(db.Entity):
     user = orm.Required(User)
     read = orm.Required(bool, default=False)
     notification = orm.Required(Notification)
+
+    def to_json(self):
+        data = self.to_dict()
+        data['type'] = self.notification.event.name
+        data['notification'] = self.notification.message()
+        return data
