@@ -12,7 +12,7 @@ User notification system in which a user can:
 
 ## Notes
 
-I created a simple example of how this would work and hosted it on [notifications.pech0rin.com](http://notifications.pech0rin.com). The code that is running lives here.
+I created a simple example of how this would work and hosted it on [notifications.pech0rin.com](http://notifications.pech0rin.com). The code that is running lives in this git repository.
 
 There are a few things missing in the live example:
 - Enable/Disable notifications
@@ -29,18 +29,18 @@ The architecture is based on offloading the notifications to workers which in tu
 
 Postgres schema with comments about indexes: [schema](https://github.com/sjohnson540/notification-service/blob/master/db/schema.sql)
 
-The basic models are:
+The basic [models](https://github.com/sjohnson540/notification-service/blob/master/notifications/models.py) are:
 
 - User
 - TestScenario
-- NotificationSubscription (this keeps track of what events users should be notified about)
-- Events (stores the types of events users can be notified about [CREATE, EXECUTE, DELETE]
-- Notification (keeps track of events for specific test scenarios)
-- UserNotification (keeps track of an individual notifications sent to users)
+- NotificationSubscription -- keeps track of what events users should be notified about
+- Events -- stores the types of events users can be notified about [CREATE, EXECUTE, DELETE]
+- Notification -- keeps track of events for specific test scenarios
+- UserNotification -- keeps track of an individual notifications sent to users
 
 ### Application overview
 
-- Event happens (CREATE, EXECUTE, DELETE) - Usually in the [controller](https://github.com/sjohnson540/notification-service/blob/master/notifications/controllers.py)
+- A new Event happens (CREATE, EXECUTE, DELETE) - usually in the [API controller](https://github.com/sjohnson540/notification-service/blob/master/notifications/controllers.py)
 - [NotificationWorker](https://github.com/sjohnson540/notification-service/blob/master/notifications/workers/notification.py) message is enqueued given the event and test scenario.
 - NotificationWorker checks the NotificationSubscription table to see who should be notified
 - For every user subscription that matches we enqueue a [UserNotificiationWorker](https://github.com/sjohnson540/notification-service/blob/master/notifications/workers/user_notification.py)
@@ -52,7 +52,7 @@ The basic models are:
 
 - Dedeplucation of data. The way the database tables are setup we don't duplicate any of the data for messages, events or subscriptions. This means its easy to add new events, scenarios, and subscription types without worrying about data inconsistancies
 
-- Extensible. If we wanted to send emails, slack notifications, sms, we can add all that logic to the UserNotification worker and its happening behind the scenes without slowing down the main application.
+- Extensible. If we wanted to send emails, slack notifications, sms, we can add all that logic to the UserNotificationWorker and its happening behind the scenes without slowing down the main application.
 
 #### Cons
 

@@ -1,4 +1,5 @@
-\.*
+\.git
+\.eb*
 web/bin/audio
 node_modules
 *__pycache__*

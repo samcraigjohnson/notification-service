@@ -17,7 +17,7 @@
 
 *** DONE If time, create simple UI
 
-*** TODO Write readme
+*** DONE Write readme
 
 *** TODO Deploy on server
 
@@ -37,7 +37,7 @@
   are okay
 - extenisble, if we wanted to send emails, slack notifications, sms,
   we can add all that logic to the UserNotification worker and its
-  happening behind the scenes
+  happening behind
 
 ** cons
 - currently no retry mechanism for failed workers, would
