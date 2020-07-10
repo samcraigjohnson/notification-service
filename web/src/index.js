@@ -1,11 +1,6 @@
 import css from "../css/style.css";
 
 import m from "mithril";
-import Notifications from "./models/Notifications.js";
+import Main from "./views/Main.js";
 
-m.render(document.body, [
-  m("main-view", [
-    m("thing", 'WOOP'),
-  ]),
-
-]);
+m.mount(document.body, Main);

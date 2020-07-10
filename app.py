@@ -42,6 +42,7 @@ ts = controllers.TestScenarioResource()
 static = controllers.StaticResource()
 
 app.add_route("/api/notifs", notifs)
+app.add_route("/api/notifs/subs", notifs, suffix="subs")
 app.add_route("/api/notifs/{notif_id:int}/read", notifs, suffix="read")
 
 app.add_route("/api/ts", ts)

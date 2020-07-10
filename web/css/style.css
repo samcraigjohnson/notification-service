@@ -2,16 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --pp-blue: #3f6a8a;
-    --pp-green: #4ab19d;
-    --pp-red: #dda5b6;
-    --pp-yellow: #f2cc8c;
-    --text-gray: #4d5e72;
-    --off-yellow: #f1e6c1;
-    --white: #ffffff;
-    --off-white: #fff;
-    --pale-yellow: #fffef2;
-    --mc-hover: var(--off-white);
-    --main-bg: var(--pale-yellow);
+
+.btn {
+    @apply font-bold py-2 px-4 rounded m-5;
+    display: inline;
+    width: auto;
+}
+.btn-blue {
+    @apply bg-blue-500 text-white;
+}
+.btn-blue:hover {
+    @apply bg-blue-700;
+}
+.notifications {
+    width: 800px;
 }

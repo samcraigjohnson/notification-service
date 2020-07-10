@@ -11,14 +11,22 @@ class NotificationsResource:
     def on_get(self, req, resp):
         resp.media = [un.to_json() for un in models.UserNotification.select()]
 
+    @orm.db_session
+    def on_get_subs(self, req, resp):
+        resp.media = [
+            ns.to_json() for ns in models.NotificationSubscription.select()
+        ]
+
+    @orm.db_session
     def on_post_read(self, req, resp, notif_id):
         models.UserNotification[notif_id].read = True
+        return "OK"
 
 
 class TestScenarioResource:
     @orm.db_session
     def on_get(self, req, resp):
-        resp.media = [ts.to_json() for ts in models.TestScenario]
+        resp.media = [ts.to_json() for ts in models.TestScenario.select()]
 
     @orm.db_session
     def on_post(self, req, resp):
@@ -41,7 +49,6 @@ class TestScenarioResource:
 
 class StaticResource:
     def on_get(self, req, resp):
-        # do some sanity check on the filename
         resp.status = falcon.HTTP_200
         resp.content_type = "text/html"
         with open(os.path.abspath("./web/html/index.html"), "rb") as f:

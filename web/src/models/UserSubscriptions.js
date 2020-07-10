@@ -2,9 +2,8 @@ import m from "mithril";
 
 const Notifications = {
   list: [],
-  subs: [],
 
-  load: () => {
+  load: (id) => {
     return m.request({
       method: "GET",
       url: "/api/notifs"
@@ -13,22 +12,13 @@ const Notifications = {
     });
   },
 
-  loadSubs: () => {
-    return m.request({
-      method: "GET",
-      url: "/api/notifs/subs"
-    }).then(result => {
-      Notifications.subs = result
-    });
-  },
-
   markRead: (id) => {
-    return m.request({
+    return api.request({
       method: "POST",
       url: `/api/notifs/${id}/read`
-    }).then(result => {
-      Notifications.load();
     });
+
+    Notifications.load();
   },
 };
 

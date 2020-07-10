@@ -76,6 +76,12 @@ class Event(db.Entity):
     notifications = orm.Set('Notification')
     notification_subscriptions = orm.Set('NotificationSubscription')
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
 
 class TestScenario(db.Entity):
     id = orm.PrimaryKey(int, auto=True)
@@ -88,7 +94,12 @@ class TestScenario(db.Entity):
         self.created_at = datetime.utcnow()
 
     def to_json(self):
-        return {'id': self.id}
+        return {
+            'id': self.id,
+            'created_at': str(self.created_at),
+            'executed_at': str(self.executed_at),
+            'deleted_at': str(self.deleted_at),
+        }
 
 
 class Notification(db.Entity):
@@ -116,6 +127,11 @@ class NotificationSubscription(db.Entity):
     id = orm.PrimaryKey(int, auto=True)
     user = orm.Required(User)
     event = orm.Required(Event)
+
+    def to_json(self):
+        data = self.to_dict()
+        data['event'] = self.event.to_json()
+        return data
 
 
 class UserNotification(db.Entity):

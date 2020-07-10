@@ -16,3 +16,33 @@
 *** TODO Add notifs endpoint
 
 *** TODO If time, create simple UI
+
+
+** To add
+- error handling
+- deletion handling for test scenario
+- put the messages in sqs
+- UI should be restricted to the user
+- tests
+- performance testing for large number of subscriptions
+
+** pros
+- deduplication of data
+- decoupling of business logic (aka CRUD for test scenarios)
+  and notification sending, so if notifications fail then we
+  are okay
+- extenisble, if we wanted to send emails, slack notifications, sms,
+  we can add all that logic to the UserNotification worker and its
+  happening behind the scenes
+
+** cons
+- currently no retry mechanism for failed workers, would
+  be easy to add in with a worker library of some sort, ie sidekiq
+  for rails, reason i chose to write my own was for sake of example
+  and simplicity
+
+- deduplication of data schema requires so extra round trips, we could
+  include the message in the UserNotification model but would make it hard
+  to centrally update
+
+-'
