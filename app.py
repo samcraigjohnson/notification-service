@@ -3,6 +3,7 @@ import falcon
 import logging
 
 from pony import orm
+orm.sql_debug(True)
 
 # Setup environment variables
 from dotenv import load_dotenv
@@ -14,9 +15,6 @@ else:
     load_dotenv(verbose=True)
 
 from notifications import db
-if os.environ.get("SQL_DEBUG", "") == "true":
-    orm.sql_debug(True)
-
 logging.basicConfig(level=os.environ.get("LOG_LEVEL", logging.INFO))
 
 from notifications import models

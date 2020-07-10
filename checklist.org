@@ -1,0 +1,16 @@
+
+* Notifications
+
+** To complete
+
+*** DONE Create schema
+
+*** DONE Add indexes to schema
+
+*** DONE Add business logic for test scenarios
+    - After a test scenario is created/execute/deleted create notification
+      and fire off user notifications
+
+*** TODO If time, hook everything up to S3
+
+*** TODO If time, create simple UI
