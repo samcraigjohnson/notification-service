@@ -17,6 +17,7 @@ I created a simple example of how this would work and hosted it on [notification
 There are a few things missing in the live example:
 - Enable/Disable notifications
 - User authentication/specific user delivery
+- Enqueing messages to SQS or other worker queue
 
 It is only meant as a example for the core concepts of the architecture.
 
@@ -38,13 +39,17 @@ The basic [models](https://github.com/sjohnson540/notification-service/blob/mast
 - Notification -- keeps track of events for specific test scenarios
 - UserNotification -- keeps track of an individual notifications sent to users
 
+The test data is seeded in this method: [data_setup](https://github.com/sjohnson540/notification-service/blob/master/notifications/models.py#L22)
+
 ### Application overview
 
 - A new Event happens (CREATE, EXECUTE, DELETE) - usually in the [API controller](https://github.com/sjohnson540/notification-service/blob/master/notifications/controllers.py)
-- [NotificationWorker](https://github.com/sjohnson540/notification-service/blob/master/notifications/workers/notification.py) message is enqueued given the event and test scenario.
-- NotificationWorker checks the NotificationSubscription table to see who should be notified
-- For every user subscription that matches we enqueue a [UserNotificiationWorker](https://github.com/sjohnson540/notification-service/blob/master/notifications/workers/user_notification.py)
-- The UserNotificationWorker creates the UserNotification and would -- in practice -- send an email, slack message, sms, webhook or whatever method of sending we choose
+- [NotificationWorker](https://github.com/sjohnson540/notification-service/blob/master/notifications/workers/notification.py) message is enqueued to SQS given the event and test scenario.
+- NotificationWorker pull message off SQS queue and checks the NotificationSubscription table to see who should be notified
+- For every user subscription that matches we enqueue a [UserNotificiationWorker](https://github.com/sjohnson540/notification-service/blob/master/notifications/workers/user_notification.py) to SQS
+- The UserNotificationWorkers pull messages off the SQS queue and create the UserNotification and would -- in practice -- send an email, slack message, sms, webhook or whatever method of sending we choose
+- To mark messages as read we keep a boolean field on UserNotification -- which has an index so we can easily filter by that
+- To enable/disable subscriptions all we need to do is create/delete NotificationSubscription entries. Old notifications would be preserved this way, but the user would not receive new notifications.
 
 #### Pros
 
@@ -56,7 +61,7 @@ The basic [models](https://github.com/sjohnson540/notification-service/blob/mast
 
 #### Cons
 
-- Not instantaneous notifications. Due to the fact that the notifications are sent to workers we run the risk of having a delay with notification delivery.
+- Not instantaneous notifications. Due to the fact that the notifications are sent to workers we run the risk of having a delay with notification delivery. We may want to batch the workers, so each worker grabs 20-30 messages off the queue and processes them at once.
 
 - Deduplication of data requires some extra database joins that could be costly, even with correct indexes. We could store the message data directly into the UserNotification table, but then we would have duplicate data which may not be a tradeoff we want.
 
