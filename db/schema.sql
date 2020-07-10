@@ -1,0 +1,4 @@
+--
+-- PostgreSQL database schema
+--
+

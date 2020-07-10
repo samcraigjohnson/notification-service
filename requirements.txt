@@ -1,0 +1,11 @@
+falcon==2.0.0
+gunicorn==20.0.4
+pony==0.7.11
+psycopg2==2.8.4
+python-dotenv==0.10.3
+requests==2.22.0
+selenium==3.141.0
+boto==2.49.0
+boto3==1.12.42
+botocore==1.15.42
+lxml==4.5.0

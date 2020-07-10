@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --pp-blue: #3f6a8a;
+    --pp-green: #4ab19d;
+    --pp-red: #dda5b6;
+    --pp-yellow: #f2cc8c;
+    --text-gray: #4d5e72;
+    --off-yellow: #f1e6c1;
+    --white: #ffffff;
+    --off-white: #fff;
+    --pale-yellow: #fffef2;
+    --mc-hover: var(--off-white);
+    --main-bg: var(--pale-yellow);
+}

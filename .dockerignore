@@ -1,0 +1,6 @@
+\.*
+web/bin/audio
+node_modules
+*__pycache__*
+*pyc
+*tar.gz

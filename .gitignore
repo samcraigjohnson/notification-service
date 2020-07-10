@@ -1,0 +1,14 @@
+*pycache*
+*#*
+*pyc
+node_modules/
+*log
+web/bin
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+*.tar.gz
+.prod.env
+.vscode
+*~*~
